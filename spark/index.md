@@ -1,21 +1,18 @@
-# MLeap Spark Integration
+# MLeap Spark集成
 
-MLeap's Spark integration comes with the following feature set:
-* Serialization/Deserialization of Transformers and Pipelines to and from Bundle.ML
-* Support of additional feature transformers and models (ex: SVM, OneVsRest, MapTransform)
-* Support for custom transformers
+MLeap的Spark集成具有下列特点:
+* 将Bundle.ML中的转换器和工作流序列化/反序列化
+* 支持额外的特征转换器和模型（例如：SVM, OneVsRest, MapTransform）
+* 支持自定义转换器
 
-To use MLeap you do not have to change how you construct your existing pipelines, so the rest of the documentation is going to focus on how to serialize and deserialize your pipeline to and from bundle.ml.
-To see how to execute your pipeline outside of Spark, refer to the [MLeap Runtime](../mleap-runtime/index.md) section.
+要使用MLeap，您不必更改现有工作流的构建方式，因此接下来的文章更集中于如何从bundle.ml序列化和反序列化你的工作流。
+如何在Spark外执行工作流，参考[MLeap Runtime](../mleap-runtime/index.md)章节。
 
-# Serializing with Spark
+# Spark序列化
 
-Serializing and deserializing with Spark works almost exactly the same
-as with MLeap. The only difference is we are serializing and
-deserializing Spark pipelines and we need to import different implicit
-support classes.
+使用Spark进行序列化和反序列化几乎与MLeap完全相同。唯一的不同点是序列化和反序列化Spark工作流我们需要引入不同的隐式支持类。
 
-## Create a Simple Spark Pipeline
+## 构建一个简单的Spark工作流
 
 ```scala
 import ml.combust.bundle.BundleFile
@@ -38,15 +35,13 @@ val featureAssembler = new VectorAssembler().setInputCols(Array("a_double")).
 val pipeline = SparkUtil.createPipelineModel(Array(stringIndexer, featureAssembler))
 ```
 
-## Serialize to Zip File
+## 序列化到压缩文件
 
-In order to serialize to a zip file, make sure the URI begins with
-`jar:file` and ends with a `.zip`.
+为了序列化到压缩文件，确保URI以`jar:file`作为前缀，以`.zip`作为后缀。
 
-For example
-`jar:file:/tmp/mleap-bundle.zip`.
+例如`jar:file:/tmp/mleap-bundle.zip`
 
-### JSON Format
+### JSON格式
 
 ```scala
 for(bundle <- managed(BundleFile("jar:file:/tmp/mleap-examples/simple-json.zip"))) {
@@ -54,7 +49,7 @@ for(bundle <- managed(BundleFile("jar:file:/tmp/mleap-examples/simple-json.zip")
 }
 ```
 
-### Protobuf Format
+### Protobuf格式
 
 ```scala
 for(bundle <- managed(BundleFile("jar:file:/tmp/mleap-examples/simple-protobuf.zip"))) {
@@ -62,14 +57,13 @@ for(bundle <- managed(BundleFile("jar:file:/tmp/mleap-examples/simple-protobuf.z
 }
 ```
 
-## Serialize to Directory
+## 序列化到目录
 
-In order to serialize to a directory, make sure the URI begins with
-`file`.
+为了序列化到目录，确保URI以`file`作为前缀。
 
-For example `file:/tmp/mleap-bundle-dir`
+例如 `file:/tmp/mleap-bundle-dir`
 
-### JSON Format
+### JSON格式
 
 ```scala
 for(bundle <- managed(BundleFile("file:/tmp/mleap-examples/simple-json-dir"))) {
@@ -77,7 +71,7 @@ for(bundle <- managed(BundleFile("file:/tmp/mleap-examples/simple-json-dir"))) {
 }
 ```
 
-### Protobuf Format
+### Protobuf格式
 
 ```scala
 for(bundle <- managed(BundleFile("file:/tmp/mleap-examples/simple-protobuf-dir"))) {
@@ -85,13 +79,11 @@ for(bundle <- managed(BundleFile("file:/tmp/mleap-examples/simple-protobuf-dir")
 }
 ```
 
-## Deserializing
+## 反序列化
 
-Deserializing is just as easy as serializing. You don't need to know the
-format the MLeap Bundle was serialized as beforehand, you just need to
-know where the bundle is.
+反序列化像序列化一样容易。您不需要知道MLeap Bundle先前序列化的格式，您只需知道Bundle在哪里。
 
-### From Zip Bundle
+### 压缩Bundle
 
 ```scala
 // Deserialize a zip bundle
@@ -101,7 +93,7 @@ val zipBundle = (for(bundle <- managed(BundleFile("jar:file:/tmp/mleap-examples/
 }).opt.get
 ```
 
-### Directory Bundle
+### 目录Bundle
 
 ```scala
 // Deserialize a directory bundle
